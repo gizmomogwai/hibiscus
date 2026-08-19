@@ -6,6 +6,9 @@
 
     <property environment="env" />
     <property name="build.dir" value="build" />
+    <exec executable="git" dir="${basedir}" outputproperty="plugin.version" failonerror="true">
+      <arg line="describe --tags --always --dirty" />
+    </exec>
     <xmlproperty file="plugin.xml" collapseattributes="true"/>
 
     <loadproperties srcFile="${build.dir}/build.properties"/>
@@ -116,6 +119,12 @@
     </copy>
 
     <copy file="plugin.xml" todir="${project.zipdir}" />
+    <replaceregexp file="${project.zipdir}/plugin.xml"
+                   match="name=&quot;hibiscus&quot; version=&quot;[^&quot;]+&quot;"
+                   replace="name=&quot;hibiscus&quot; version=&quot;${plugin.version}&quot;" />
+    <replaceregexp file="${project.zipdir}/plugin.xml"
+                   match="releases/nightly/hibiscus-[^&quot;]+\.zip"
+                   replace="releases/nightly/hibiscus-${plugin.version}.zip" />
     <copy file="${basedir}/LICENSE" todir="${project.zipdir}" />
     <copy file="${basedir}/COPYING" todir="${project.zipdir}" />
 
